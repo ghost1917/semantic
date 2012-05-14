@@ -1,0 +1,14 @@
+.fini
+.init
+moscow is the capital of russia
+piter is the capital of russia
+berlin is the capital of germany
+kiev is the capital of ukrane
+
+
+which city is the capital of russia
+which countrys capital is moscow
+which countrys capital is piter
+which countrys capital is kiev
+which city is the capital of germany
+.dump

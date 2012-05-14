@@ -1,0 +1,32 @@
+S::(B)(A) -> NP:=A VP:=B
+S::(A)(B) -> NPWH:=A VP:=B
+VP::(B)(A) -> V:=B NP:=A
+NP::(A)(B) -> NP:=A PP:=B
+NP::(A) -> D N:=A
+PP::(A) -> P NP:=A
+NP::(A) -> NN:=A
+NP::(A) -> N:=A
+NPWH::(A)(B) -> NPWH/NP:=A NP:=B
+NPWH::(A)(B) -> NPWH/NP/POS:=A NP:=B
+NPWH/NP/POS::(A)(B) -> NPWH/NP/POS_WAIT:=A NP_POS:=B
+
+NN::Moscow -> moscow
+NN::Piter  -> piter
+NN::Russia -> russia
+NN::Berlin -> berlin
+NN::Germany -> germany
+NN::Kiev -> kiev
+NN::Ukrane -> ukrane
+
+N::(\x.City(x)) -> city
+NP_POS::(\y.Country(y)) -> countrys
+
+V::(\P.P) -> is
+D -> a
+D -> the
+N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)) -> capital
+P -> of
+NPWH/NP::(\Q.\P.\x.P(x)&&Q(x)) -> which
+NPWH/NP/POS_WAIT::(\P.\Q.\x.\y.P(y)&&Q(y,x)) -> which
+
+
