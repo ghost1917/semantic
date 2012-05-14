@@ -1,0 +1,16 @@
+Создаваемая база геополитики будет уметь отвечать на вопросы:
+
+[DONE] 1. Whitch city is the capital of Russia? # Moscow is the capital of Russia. 
+[DONE] 2. Whitch contry's capital is Moscow? 
+
+[TODO] 4. Is Moscow in Russia? # Moscow is in Russia.
+[TODO] 5. Is Germany a neighbour of Russia? # Germany is a neighbour of Russia.
+[TODO] 6. Witch contries are neighbours of Russia?
+[TODO] 7. How many contries are neighbours of Russia?
+
+[TODO] 8. How many people live in Russia? # In Russia are living 146m people.
+[TODO] 9. Witch rivers flow through Russia?
+[TODO] 10. Witch rivers flow through Russia and Ukrane. # 
+
+[TODO] 11. Witch cities are the capitals of Russia's neighbours?
+[TODO] 12. Witch contries are crossed by Dnepr?
