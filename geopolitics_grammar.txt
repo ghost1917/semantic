@@ -1,19 +1,30 @@
 S::(B)(A) -> NP:=A VP:=B
 S::(A)(B) -> NPWH:=A VP:=B
+S::(Bool((A)(B))) -> VP/NP:=A NP/VP:=B
 
+VP/NP::(A) -> V:=A
 VP::(A)(B) -> V:=A NP:=B
-VP::(A)(\x.\y.In(x,y))(B) -> V:=A in NP:=B
+VP::(A)(B) -> V:=A PP/VP:=B
 
-NP::(\x.\P.\y.P(y)&&In(x,y))(B)(A) -> NP:=A in NP:=B
-NP::(A)(B) -> NP:=A of NP:=B
-NP::(A) -> D N:=A
+NP/VP::(B)(A) -> NP:=A PP/VP:=B
+NP/VP::(B)(A) -> NP:=A NP:=B
+
+NP::(B)(A) -> NP:=A PP/NP:=B
+PP/VP::(A)(B) -> P/VP:=A NP:=B
+PP/NP::(A)(B) -> P/NP:=A NP:=B
 NP::(A) -> NN:=A
-NP::(A) -> N:=A
+NP::(A) -> NP_PRED:=A
+NP_PRED::(A) -> N:=A
+NP_PRED::(A) -> D N:=A
 
 NPWH::(A)(B) -> NPWH/NP:=A NP:=B
 NPWH::(A)(B) -> NPWH/NP/POS:=A NP:=B
 NPWH/NP/POS::(A)(B) -> NPWH/NP/POS_WAIT:=A NP_POS:=B
 NP_POS::(A) -> N:=A s
+
+P/VP::(\x.\y.In(x,y)) -> in
+P/NP::(\x.\P.\y.P(y)&&In(x,y)) -> in
+P/NP::(\x.\P.P(x)) -> of
 
 N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capital
 N::(\y.Country(y)) -> country

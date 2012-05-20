@@ -11,4 +11,7 @@ piter is the city in russia
 how many cities are in russia
 how many cities are in ukrane
 
+#is moscow the  capital of russia
+is piter in russia
+
 .dump

@@ -41,8 +41,10 @@ class SqlGenerator:
                isinstance (node.function, nodes.Symbol) and \
                node.function.name == "Count"
     
-    def is_yes_no (self, node):
-        return False;
+    def is_bool (self, node):
+        return isinstance (node, nodes.Application) and \
+               isinstance (node.function, nodes.Symbol) and \
+               node.function.name == "Bool"
 
     def resolve_column(self, table, n):
         return "arg%d" % n
@@ -165,17 +167,39 @@ class SqlGenerator:
 
         yield "SELECT count(1) FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
     
-    def make_yes_no (self, node):
-        pass
+    def make_bool (self, node):
+        self.type = "SELECT"
+
+        self._visit_combinator(self._visit_function(node.argument))
+
+        original_table_names = set(map(operator.itemgetter(0), self.tables))
+        mapped_table_names = set(map(operator.itemgetter(1), self.tables))
+
+        if len(original_table_names) != len(mapped_table_names):
+            raise RuntimeError, "Expression is too complex to be converted into a single insert statement."
+
+        reverse_table_mapping = dict(map(lambda x: (x[1], x[0]), self.tables))
+
+        inserted_values = defaultdict(list)
+
+        for table, column, value in self.constraints:
+            inserted_values[table].append( (self.resolve_column(table, column), self.resolve_value(value)) )
+        for table in inserted_values.iterkeys():
+            columns_and_values = inserted_values[table]            
+            
+            condition = " AND ".join (map("=".join,columns_and_values))
+
+            yield ("SELECT  case when count(1) THEN \"yes\"  ELSE \"no\" END " + \
+                  "FROM {0} WHERE {1}").format(reverse_table_mapping[table], condition)
 
     def make_sql(self, node):
         generator = None
-        print "make_sql (%s) called" % str (node)        
+        #print "make_sql (%s) called" % str (node)        
 
         if self.is_count(node):
             generator = self.make_count(node)
-        elif self.is_yes_no(node):
-            generator = self.make_yes_no (node)
+        elif self.is_bool(node):
+            generator = self.make_bool (node)
         elif self.is_insert(node):
             generator = self.make_insert(node)
         elif self.is_select(node):
