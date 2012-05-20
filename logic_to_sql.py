@@ -10,12 +10,10 @@ import logic_ast_nodes as nodes
 
 class SqlGenerator:
     SYMBOL_MAPPING = {
-        "Capital" : 'capital',
-        "City"    : 'city',
-        "Country" : 'country',
-        "Moscow"  : 'Moscow',
-        "Piter"   : 'Piter',
-        "Russia"  : 'Russia'
+        "Capital"        : 'capital',
+        "City"           : 'city',
+        "Country"        : 'country',
+        "In"             : 'in_relation'
     }
 
     def __init__(self):

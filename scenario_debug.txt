@@ -1,0 +1,13 @@
+# Этот сценарий нужен для отладки
+# В нем задаются последние отлаживаемые команды
+# и при исполнении проверяется, правильно ли они проходят
+.fini
+.init
+.trace
+.debug
+kiev is the capital of ukrane
+which city is the capital of ukrane
+which country s capital is kiev
+germany is a country
+
+.dump

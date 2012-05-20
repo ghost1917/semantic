@@ -1,32 +1,44 @@
 S::(B)(A) -> NP:=A VP:=B
 S::(A)(B) -> NPWH:=A VP:=B
-VP::(B)(A) -> V:=B NP:=A
-NP::(A)(B) -> NP:=A PP:=B
+
+VP::(A)(B) -> V:=A NP:=B
+VP::(A)(\x.\y.In(x,y))(B) -> V:=A in NP:=B
+
+NP::(\x.\P.\y.P(y)&&In(x,y))(B)(A) -> NP:=A in NP:=B
+NP::(A)(B) -> NP:=A of NP:=B
 NP::(A) -> D N:=A
-PP::(A) -> P NP:=A
 NP::(A) -> NN:=A
 NP::(A) -> N:=A
+
 NPWH::(A)(B) -> NPWH/NP:=A NP:=B
 NPWH::(A)(B) -> NPWH/NP/POS:=A NP:=B
 NPWH/NP/POS::(A)(B) -> NPWH/NP/POS_WAIT:=A NP_POS:=B
+NP_POS::(A) -> N:=A s
 
-NN::Moscow -> moscow
-NN::Piter  -> piter
-NN::Russia -> russia
-NN::Berlin -> berlin
-NN::Germany -> germany
-NN::Kiev -> kiev
-NN::Ukrane -> ukrane
-
+N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capital
+N::(\y.Country(y)) -> country
+N::(\x.City(x)) -> cities
 N::(\x.City(x)) -> city
-NP_POS::(\y.Country(y)) -> countrys
 
 V::(\P.P) -> is
+V::(\P.P) -> are
+
 D -> a
 D -> the
-N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)) -> capital
-P -> of
+
+NPWH::(\x.\y.In(y,x)) -> where
 NPWH/NP::(\Q.\P.\x.P(x)&&Q(x)) -> which
 NPWH/NP/POS_WAIT::(\P.\Q.\x.\y.P(y)&&Q(y,x)) -> which
 
+NN::Russia -> russia
+NN::Germany -> germany
+NN::Ukrane -> ukrane
+
+NN::Moscow -> moscow
+NN::Piter  -> piter
+NN::Vladimir -> vladimir
+NN::Berlin -> berlin
+NN::Kiev -> kiev
+NN::Odessa -> odessa
+NN::Kharkiv -> kharkiv
 

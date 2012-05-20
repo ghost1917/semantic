@@ -1,0 +1,32 @@
+# это тестовый сценарий, своего рода "регресионный тест",
+# правда проверяющийся глазами.
+# цель этого сценария - проверить, что в результате нововведений
+# ничего старого не отвалилось
+
+# Очищаем нашу базу знаний
+.clear
+
+# Проверяем столицы
+#========================================
+kiev is a capital of ukrane
+moscow is a capital of russia
+
+# задаем вопросы по поводу столиц
+which city is the capital of ukrane
+which country s capital is kiev
+#========================================
+
+
+#========================================
+# Проверяем принадлежность городов странам
+.clear
+russia is a country
+piter is a city
+piter is in russia
+vladimir is a city in russia
+
+# Задаем вопросы о принадлежности
+which cities are in russia
+where is vladimir
+
+.dump

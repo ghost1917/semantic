@@ -11,6 +11,7 @@ import sys
 import cmd
 import sqlite3
 import traceback
+import re
 
 import earley
 import logic_to_sql
@@ -66,16 +67,19 @@ There are a few service commands:
         self._execute_sync("CREATE TABLE capital(arg0 TEXT UNIQUE, arg1 TEXT UNIQUE)")
         self._execute_sync("CREATE TABLE city(arg0 TEXT UNIQUE)")
         self._execute_sync("CREATE TABLE country(arg0 TEXT UNIQUE)")
+        self._execute_sync("CREATE TABLE in_relation(arg0 TEXT, arg1 TEXT UNIQUE)")
 
     def cmd_fini(self):
         self._execute_sync("DROP TABLE capital")
         self._execute_sync("DROP TABLE city")
         self._execute_sync("DROP TABLE country")
+        self._execute_sync("DROP TABLE in_relation")
 
     def cmd_clear(self):
         self._execute_sync("DELETE FROM capital")
         self._execute_sync("DELETE FROM city")
         self._execute_sync("DELETE FROM country")
+        self._execute_sync("DELETE FROM in_relation")
         
     def cmd_debug(self):
         if self.debug:
@@ -106,6 +110,11 @@ There are a few service commands:
         for row in self._execute("SELECT * FROM capital"):
             print ":", "Capital(%s)" % ", ".join(row)
 
+        print "== in relations =" + "=" * 70
+        for row in self._execute("SELECT * FROM in_relation"):
+            print ":", "In(%s,%s)" % (row [0], row [1]) 
+
+
     def cmd_eval(self, semantics):
         print semantics;
         for query in logic_to_sql.SqlGenerator().make_sql(semantics):
@@ -113,7 +122,12 @@ There are a few service commands:
                 print ":", " ".join(row)
 
     def emptyline(self):
+        print ""
         pass
+    
+    def precmd (self, line):
+        line = re.sub ('#.*', '', line);
+        return line
 
     def default(self, string):
         try:

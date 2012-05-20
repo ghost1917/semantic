@@ -1,0 +1,17 @@
+# Это сценарий для демонстрации
+# тут должно быть много всяких полезных
+# знаний и запросов к ним, чтобы
+# показать, что все работает правильно
+.fini
+.init
+.trace
+moscow is the capital of russia
+piter is the capital of russia
+berlin is the capital of germany
+kiev is the capital of ukrane
+yaroslavl is in russia
+piter is in russia
+odessa is in ukrane
+kharkov is in ukrane
+
+.dump
