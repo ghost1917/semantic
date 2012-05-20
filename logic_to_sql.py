@@ -35,6 +35,14 @@ class SqlGenerator:
     def is_select(self, node):
         return \
             isinstance(node, nodes.Lambda)
+    
+    def is_count (self, node):
+        return isinstance (node, nodes.Application) and \
+               isinstance (node.function, nodes.Symbol) and \
+               node.function.name == "Count"
+    
+    def is_yes_no (self, node):
+        return False;
 
     def resolve_column(self, table, n):
         return "arg%d" % n
@@ -136,11 +144,39 @@ class SqlGenerator:
             self.constraints))
 
         yield "SELECT {0} FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
+        
+    def make_count (self, node):
+        self.type = "SELECT"
+
+        variables, body = node.argument.uncurry()
+        
+        self._visit_combinator(self._visit_function(body))
+        self._induce_variable_constraints()
+
+        result_clause = ", ".join(map(
+            lambda kv: "%s AS %s" % (self.resolve_value(list(kv[1])[0]), kv[0]),
+            self.variables.items()))
+        from_clause = ", ".join(map(
+            lambda t: "%s AS %s" % t,
+            self.tables))
+        where_clause = " AND ".join(map(
+            lambda c: "%s = %s" % (self.resolve_value(c[0:2]), self.resolve_value(c[2])), 
+            self.constraints))
+
+        yield "SELECT count(1) FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
+    
+    def make_yes_no (self, node):
+        pass
 
     def make_sql(self, node):
         generator = None
+        print "make_sql (%s) called" % str (node)        
 
-        if self.is_insert(node):
+        if self.is_count(node):
+            generator = self.make_count(node)
+        elif self.is_yes_no(node):
+            generator = self.make_yes_no (node)
+        elif self.is_insert(node):
             generator = self.make_insert(node)
         elif self.is_select(node):
             generator = self.make_select(node)

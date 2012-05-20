@@ -119,7 +119,7 @@ There are a few service commands:
         print semantics;
         for query in logic_to_sql.SqlGenerator().make_sql(semantics):
             for row in self._execute(query):
-                print ":", " ".join(row)
+                print ":", " ".join(map(str, row))
 
     def emptyline(self):
         print ""

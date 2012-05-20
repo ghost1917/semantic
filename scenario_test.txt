@@ -26,7 +26,8 @@ piter is in russia
 vladimir is a city in russia
 
 # Задаем вопросы о принадлежности
-which cities are in russia
 where is vladimir
+which cities are in russia
+how many cities are in russia
 
 .dump

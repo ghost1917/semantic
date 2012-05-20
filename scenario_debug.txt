@@ -5,9 +5,10 @@
 .init
 .trace
 .debug
-kiev is the capital of ukrane
-which city is the capital of ukrane
-which country s capital is kiev
-germany is a country
+moscow is the capital of russia
+vladimir is the city in russia
+piter is the city in russia
+how many cities are in russia
+how many cities are in ukrane
 
 .dump

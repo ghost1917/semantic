@@ -29,6 +29,7 @@ D -> the
 NPWH::(\x.\y.In(y,x)) -> where
 NPWH/NP::(\Q.\P.\x.P(x)&&Q(x)) -> which
 NPWH/NP/POS_WAIT::(\P.\Q.\x.\y.P(y)&&Q(y,x)) -> which
+NPWH/NP::(\P.\Q.Count(\x.(P(x)&&Q(x)))) -> how many
 
 NN::Russia -> russia
 NN::Germany -> germany
