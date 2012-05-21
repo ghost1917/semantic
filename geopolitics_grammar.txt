@@ -47,6 +47,7 @@ NN::Germany -> germany
 NN::Ukrane -> ukrane
 
 NN::Moscow -> moscow
+NN::Yaroslavl -> yaroslavl
 NN::Piter  -> piter
 NN::Vladimir -> vladimir
 NN::Berlin -> berlin

@@ -1,17 +1,56 @@
-# Это сценарий для демонстрации
-# тут должно быть много всяких полезных
-# знаний и запросов к ним, чтобы
-# показать, что все работает правильно
+# Демонстрационный пример домашнего задания по семантике
+# из коммандной строки надо запустить
+#  ./repl.py scenario_demo.txt
+# чтобы увидеть как это работает
+
+# ======================================================
+# создаем чистую базу данных.....
 .fini
 .init
-.trace
+
+
+# ======================================================
+# Заполняем ее знаниями о городах и странах
 moscow is the capital of russia
-piter is the capital of russia
 berlin is the capital of germany
 kiev is the capital of ukrane
-yaroslavl is in russia
-piter is in russia
-odessa is in ukrane
-kharkov is in ukrane
 
-.dump
+yaroslavl is the city in russia
+piter is the city in russia
+odessa is a city
+odessa is in ukrane
+kharkiv is a city 
+kharkiv is in ukrane
+
+
+# ======================================================
+# А вот разные запросы к нашей базе знаний:
+
+# тип 1 
+which city is a capital of russia
+which city is a capital of germany
+which city is a capital of ukrane
+
+# тип 2
+which country s capital is moscow
+which country s capital is kiev
+which country s capital is berlin
+
+# тип 3
+where is moscow
+where is piter
+
+# тип 4
+which cities are in russia
+which cities are in ukrane
+which cities are in berlin
+
+# тип 5  - тип sql запроса с how many
+how many cities are in russia
+how many cities are in ukrane
+
+# тип 6 - тип sql запроса на yes/no
+is piter in russia
+is piter the capital of russia
+is moscow the capital of russia
+
