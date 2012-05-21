@@ -16,6 +16,7 @@ class SqlGenerator:
         "In"             : 'in_relation'
     }
 
+
     def __init__(self):
         self.type = None
 
@@ -25,6 +26,7 @@ class SqlGenerator:
 
         self.stack = []
 
+
     def is_insert(self, node):
         return \
             isinstance(node, nodes.Application) or \
@@ -32,26 +34,32 @@ class SqlGenerator:
             isinstance(node, nodes.And) or \
             isinstance(node, nodes.Or)
 
+
     def is_select(self, node):
         return \
             isinstance(node, nodes.Lambda)
+
     
     def is_count (self, node):
         return isinstance (node, nodes.Application) and \
                isinstance (node.function, nodes.Symbol) and \
                node.function.name == "Count"
+
     
     def is_bool (self, node):
         return isinstance (node, nodes.Application) and \
                isinstance (node.function, nodes.Symbol) and \
                node.function.name == "Bool"
 
+
     def resolve_column(self, table, n):
         return "arg%d" % n
 
+    
     def resolve_table(self, table):
         if isinstance(table, str):
             return str
+
         elif isinstance(table, nodes.Symbol):
             n = self.SYMBOL_MAPPING[table.name]
             t = "alias%d_%s" % (len(self.tables), n)
@@ -59,6 +67,7 @@ class SqlGenerator:
             return t
         else:
             raise RuntimeError, "Unable to deduce table name from value: {0}".format(repr(table))
+
 
     def resolve_value(self, value):
         if isinstance(value, str):
@@ -71,10 +80,10 @@ class SqlGenerator:
         else:
             raise RuntimeError, "Unable to deduce table name from value: {0}".format(repr(value))
 
+
     def _visit_function(self, node):
         if isinstance(node, nodes.Application):
             table, values = node.uncurry()
-
             table = self.resolve_table(table)
 
             for n, value in enumerate(values):
@@ -84,21 +93,24 @@ class SqlGenerator:
                     self.variables[value.name].add((table, n))
         elif isinstance(node, nodes.And):
             node.visit(self._visit_function, self._visit_combinator, None)
-        #elif isinstance(node, nodes.Not):
-        #    raise RuntimeError, "'Not' clauses are not supported currently."
+        elif isinstance(node, nodes.Negation):
+            raise RuntimeError, "'Not' clauses are not supported currently."
         elif isinstance(node, nodes.Or):
             raise RuntimeError, "'Or' clauses are not supported currently."
         else:
             raise RuntimeError, "Unsupported node: {0}".format(repr(node))
 
-    def _visit_combinator(self, *args):
+
+    def  _visit_combinator(self, *args):
         pass
+
 
     def _induce_variable_constraints(self):
         for variable in self.variables:
             variable_constraints = list(self.variables[variable])
             for lhs, rhs in zip(variable_constraints[0:], variable_constraints[1:]):
                 self.constraints.append((lhs[0], lhs[1], rhs))
+
 
     def make_insert(self, node):
         self.type = "INSERT OR IGNORE"
@@ -127,10 +139,11 @@ class SqlGenerator:
 
             yield "INSERT OR IGNORE INTO %s VALUES %s" % (table_clause, values_clause)
 
+
     def make_select(self, node):
         self.type = "SELECT"
 
-        variables, body = node.uncurry()
+        body = node.uncurry() [1]
         
         self._visit_combinator(self._visit_function(body))
         self._induce_variable_constraints()
@@ -146,18 +159,15 @@ class SqlGenerator:
             self.constraints))
 
         yield "SELECT {0} FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
+    
         
     def make_count (self, node):
         self.type = "SELECT"
 
-        variables, body = node.argument.uncurry()
-        
-        self._visit_combinator(self._visit_function(body))
+        body = node.argument.uncurry() [1]        
+        self._visit_combinator(self._visit_function(body))       
         self._induce_variable_constraints()
-
-        result_clause = ", ".join(map(
-            lambda kv: "%s AS %s" % (self.resolve_value(list(kv[1])[0]), kv[0]),
-            self.variables.items()))
+        
         from_clause = ", ".join(map(
             lambda t: "%s AS %s" % t,
             self.tables))
@@ -165,36 +175,27 @@ class SqlGenerator:
             lambda c: "%s = %s" % (self.resolve_value(c[0:2]), self.resolve_value(c[2])), 
             self.constraints))
 
-        yield "SELECT count(1) FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
+        yield "SELECT count(1) FROM {0} WHERE {1}".format(from_clause, where_clause)
+    
     
     def make_bool (self, node):
         self.type = "SELECT"
 
         self._visit_combinator(self._visit_function(node.argument))
+        self._induce_variable_constraints()
+        
+        from_clause = ", ".join(map(
+            lambda t: "%s AS %s" % t,
+            self.tables))
+        where_clause = " AND ".join(map(
+            lambda c: "%s = %s" % (self.resolve_value(c[0:2]), self.resolve_value(c[2])), 
+            self.constraints))
 
-        original_table_names = set(map(operator.itemgetter(0), self.tables))
-        mapped_table_names = set(map(operator.itemgetter(1), self.tables))
+        yield "SELECT case when count(1) THEN \"yes\"  ELSE \"no\" END FROM {0} WHERE {1}".format(from_clause, where_clause)
 
-        if len(original_table_names) != len(mapped_table_names):
-            raise RuntimeError, "Expression is too complex to be converted into a single insert statement."
-
-        reverse_table_mapping = dict(map(lambda x: (x[1], x[0]), self.tables))
-
-        inserted_values = defaultdict(list)
-
-        for table, column, value in self.constraints:
-            inserted_values[table].append( (self.resolve_column(table, column), self.resolve_value(value)) )
-        for table in inserted_values.iterkeys():
-            columns_and_values = inserted_values[table]            
-            
-            condition = " AND ".join (map("=".join,columns_and_values))
-
-            yield ("SELECT  case when count(1) THEN \"yes\"  ELSE \"no\" END " + \
-                  "FROM {0} WHERE {1}").format(reverse_table_mapping[table], condition)
 
     def make_sql(self, node):
         generator = None
-        #print "make_sql (%s) called" % str (node)        
 
         if self.is_count(node):
             generator = self.make_count(node)

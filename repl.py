@@ -23,7 +23,7 @@ class SimpleREPL(cmd.Cmd):
     def __init__(self, stream):
         print repr(stream)
         cmd.Cmd.__init__(self, "Tab", stream)
-        self.prompt = "[syntax parser ] "
+        self.prompt = ""
         self.intro = """
 This is a simple Like-Hate query console.
 There are a few service commands:
@@ -116,17 +116,17 @@ There are a few service commands:
 
 
     def cmd_eval(self, semantics):
-        print semantics;
+        #print semantics;
         for query in logic_to_sql.SqlGenerator().make_sql(semantics):
             for row in self._execute(query):
                 print ":", " ".join(map(str, row))
 
     def emptyline(self):
-        print ""
         pass
     
     def precmd (self, line):
         line = re.sub ('#.*', '', line);
+        line.rstrip (); 
         return line
 
     def default(self, string):
