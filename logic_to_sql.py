@@ -15,7 +15,7 @@ class SqlGenerator:
         "Country"        : 'country',
         "In"             : 'in_relation',
         "Neighbor"       : 'neighbor',
-        
+        "Largest"        : 'largest'        
     }
 
 

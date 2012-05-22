@@ -49,6 +49,7 @@ which country s capital is berlin
 # тип 3
 where is moscow
 where is piter
+where is kiev
 
 # тип 4
 which cities are in russia
@@ -58,16 +59,30 @@ which cities are in berlin
 # тип 5  - тип sql запроса с how many
 how many cities are in russia
 how many cities are in ukrane
+how many cities are in belarus
 
 # тип 6 - тип sql запроса на yes/no
 is piter in russia
-is piter the capital of russia
-is moscow the capital of russia
-
+is kiev in russia
+is moscow in ukrane 
 
 # тип 7
-which countries border with russia and border with ukrane
-which countries border with russia and border with ukrane
+is piter the capital of russia
+is moscow the capital of russia
+is kiev the capital of ukrane
+
 
 # тип 8
+which countries border with russia and border with ukrane
+which countries border with russia and border with belarus
+which countries border with russia and border with germany
+
+# тип 9
 how many countries border with russia and border with ukrane
+how many countries border with russia and border with belarus
+how many countries border with russia and border with germany
+
+# тип 10 
+what is the largest city in russia
+what is the largest city in berlin
+what is the largest city in ukrane

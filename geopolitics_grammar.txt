@@ -9,6 +9,7 @@ VP::(\x.A(x)&&B(x)) -> VP:=A AND VP:=B
 NP/VP::(B)(A) -> NP:=A PP/VP:=B
 NP/VP::(B)(A) -> NP:=A NP:=B
 
+NP::(\x.A(x)&&B(x)) -> D ADJ:=A NP_PRED:=B
 NP::(B)(A) -> NP:=A PP/NP:=B
 PP/VP::(A)(B) -> P/VP:=A NP:=B
 PP/NP::(A)(B) -> P/NP:=A NP:=B
@@ -44,9 +45,12 @@ V::(\P.P) -> are
 V::(\x.\y.Neighbor(x,y)) -> borders
 V::(\x.\y.Neighbor(x,y)) -> border
 
+ADJ::(\x.Largest(x)) -> largest
+
 D -> a
 D -> the
 
+NPWH::(\P.P) -> what
 NPWH::(\x.\y.In(y,x)) -> where
 NPWH/NP::(\Q.\P.\x.P(x)&&Q(x)) -> which
 NPWH/NP/POS_WAIT::(\P.\Q.\x.\y.P(y)&&Q(y,x)) -> which
