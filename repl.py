@@ -68,18 +68,21 @@ There are a few service commands:
         self._execute_sync("CREATE TABLE city(arg0 TEXT UNIQUE)")
         self._execute_sync("CREATE TABLE country(arg0 TEXT UNIQUE)")
         self._execute_sync("CREATE TABLE in_relation(arg0 TEXT, arg1 TEXT UNIQUE)")
-
+        self._execute_sync("CREATE TABLE neighbor(arg0 TEXT, arg1 TEXT, UNIQUE (arg0, arg1))")
+        
     def cmd_fini(self):
         self._execute_sync("DROP TABLE capital")
         self._execute_sync("DROP TABLE city")
         self._execute_sync("DROP TABLE country")
         self._execute_sync("DROP TABLE in_relation")
+        self._execute_sync("DROP TABLE neighbor")
 
     def cmd_clear(self):
         self._execute_sync("DELETE FROM capital")
         self._execute_sync("DELETE FROM city")
         self._execute_sync("DELETE FROM country")
         self._execute_sync("DELETE FROM in_relation")
+        self._execute_sync("DELETE FROM neighbor")
         
     def cmd_debug(self):
         if self.debug:
@@ -114,6 +117,9 @@ There are a few service commands:
         for row in self._execute("SELECT * FROM in_relation"):
             print ":", "In(%s,%s)" % (row [0], row [1]) 
 
+        print "== neighbors =" + "=" * 70
+        for row in self._execute("SELECT * FROM neighbor"):
+            print ":", "In(%s,%s)" % (row [0], row [1]) 
 
     def cmd_eval(self, semantics):
         #print semantics;

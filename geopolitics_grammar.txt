@@ -5,7 +5,7 @@ S::(Bool((A)(B))) -> VP/NP:=A NP/VP:=B
 VP/NP::(A) -> V:=A
 VP::(A)(B) -> V:=A NP:=B
 VP::(A)(B) -> V:=A PP/VP:=B
-
+VP::(\x.A(x)&&B(x)) -> VP:=A AND VP:=B
 NP/VP::(B)(A) -> NP:=A PP/VP:=B
 NP/VP::(B)(A) -> NP:=A NP:=B
 
@@ -21,18 +21,28 @@ NPWH::(A)(B) -> NPWH/NP:=A NP:=B
 NPWH::(A)(B) -> NPWH/NP/POS:=A NP:=B
 NPWH/NP/POS::(A)(B) -> NPWH/NP/POS_WAIT:=A NP_POS:=B
 NP_POS::(A) -> N:=A s
+NP_POS::(A) -> NN:=A s
+NP::(B)(A) -> NP_POS:=A NP:=B
+
 
 P/VP::(\x.\y.In(x,y)) -> in
+P/VP::(\x.x) -> with
 P/NP::(\x.\P.\y.P(y)&&In(x,y)) -> in
 P/NP::(\x.\P.P(x)) -> of
+AND -> and
 
 N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capital
+N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capitals
+N::(\y.Country(y)) -> countries
 N::(\y.Country(y)) -> country
 N::(\x.City(x)) -> cities
 N::(\x.City(x)) -> city
+N::(\x.\y.Neighbor(x,y)) -> neighbors
 
 V::(\P.P) -> is
 V::(\P.P) -> are
+V::(\x.\y.Neighbor(x,y)) -> borders
+V::(\x.\y.Neighbor(x,y)) -> border
 
 D -> a
 D -> the
@@ -45,6 +55,7 @@ NPWH/NP::(\P.\Q.Count(\x.(P(x)&&Q(x)))) -> how many
 NN::Russia -> russia
 NN::Germany -> germany
 NN::Ukrane -> ukrane
+NN::Belarus -> belarus
 
 NN::Moscow -> moscow
 NN::Yaroslavl -> yaroslavl

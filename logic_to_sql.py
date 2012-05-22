@@ -13,7 +13,9 @@ class SqlGenerator:
         "Capital"        : 'capital',
         "City"           : 'city',
         "Country"        : 'country',
-        "In"             : 'in_relation'
+        "In"             : 'in_relation',
+        "Neighbor"       : 'neighbor',
+        
     }
 
 
@@ -119,8 +121,8 @@ class SqlGenerator:
         original_table_names = set(map(operator.itemgetter(0), self.tables))
         mapped_table_names = set(map(operator.itemgetter(1), self.tables))
 
-        if len(original_table_names) != len(mapped_table_names):
-            raise RuntimeError, "Expression is too complex to be converted into a single insert statement."
+        #if len(original_table_names) != len(mapped_table_names):
+        #    raise RuntimeError, "Expression is too complex to be converted into a single insert statement."
 
         reverse_table_mapping = dict(map(lambda x: (x[1], x[0]), self.tables))
 

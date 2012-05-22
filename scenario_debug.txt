@@ -5,15 +5,21 @@
 .init
 .trace
 .debug
-moscow is the capital of russia
-vladimir is the city in russia
-piter is the city in russia
-how many cities are in russia
-how many cities are in ukrane
+russia is a country
+ukrane is a country
+belarus is a country
+germany is a country
+germany borders with russia
+russia borders with germany
+russia borders with ukrane
+ukrane borders with russia
+belarus borders with russia
+russia borders with belarus
+ukrane borders with belarus
+belarus borders with ukrane
 
-#is moscow the  capital of russia
-is piter in russia
-is moscow the capital of russia
-is piter the capital of russia
+which countries border with russia and border with ukrane
+which countries border with ukrane and border with belarus and border with germany
+how many countries border with russia and border with ukrane
 
 .dump
