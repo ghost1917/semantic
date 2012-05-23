@@ -348,6 +348,7 @@ def load_grammar(iterable):
         raise RuntimeError, "(unreachable)"
 
     for n, line in enumerate(iterable):
+        line = re.sub ('#.*', '', line);
         parts = line.strip().split()
 
         for part in parts:
