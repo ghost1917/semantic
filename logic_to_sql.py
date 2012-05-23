@@ -27,6 +27,7 @@ class SqlGenerator:
         self.constraints = []
 
         self.stack = []
+        self.where_clause_stack = []
 
 
     def is_insert(self, node):
@@ -102,6 +103,57 @@ class SqlGenerator:
         else:
             raise RuntimeError, "Unsupported node: {0}".format(repr(node))
 
+    def _make_where_clause(self, node):
+        if isinstance(node, nodes.Application):
+            table, values = node.uncurry()
+            table = self.resolve_table(table)
+            
+            result = ""
+
+            for n, value in enumerate(values):
+                if isinstance(value, nodes.Symbol):
+                    if (result != ""):
+                        result += " AND "
+                    result += "%s.arg%d = '%s'" % (table, n, value) 
+                elif isinstance(value, nodes.Variable):
+                    self.variables[value.name].add((table, n))
+            
+            if result == "":
+                return None
+            else:
+                return "(" + result + ")"
+        elif isinstance(node, nodes.And):
+            lhs_value = self._make_where_clause(node.lhs)
+            rhs_value = self._make_where_clause(node.rhs)
+            if lhs_value is None and rhs_value is None:
+                return None
+            elif lhs_value is None:
+                return rhs_value
+            elif rhs_value is None:
+                return lhs_value
+            else:
+                return "%s AND %s" % (lhs_value, rhs_value)                
+
+        elif isinstance(node, nodes.Negation):
+            body_value = self._make_where_clause(node.body)
+            if body_value is None:
+                return None
+            else:
+                return "NOT %s" % (body_value)                
+
+        elif isinstance(node, nodes.Or):
+            lhs_value = self._make_where_clause(node.lhs)
+            rhs_value = self._make_where_clause(node.rhs)
+            if lhs_value is None and rhs_value is None:
+                return None
+            elif lhs_value is None:
+                return rhs_value
+            elif rhs_value is None:
+                return lhs_value
+            else:
+                return "%s OR %s" % (lhs_value, rhs_value)                
+        else:
+            raise RuntimeError, "Unsupported node: {0}".format(repr(node))
 
     def  _visit_combinator(self, *args):
         pass
@@ -117,12 +169,6 @@ class SqlGenerator:
     def make_insert(self, node):
         self.type = "INSERT OR IGNORE"
         self._visit_combinator(self._visit_function(node))
-
-        original_table_names = set(map(operator.itemgetter(0), self.tables))
-        mapped_table_names = set(map(operator.itemgetter(1), self.tables))
-
-        #if len(original_table_names) != len(mapped_table_names):
-        #    raise RuntimeError, "Expression is too complex to be converted into a single insert statement."
 
         reverse_table_mapping = dict(map(lambda x: (x[1], x[0]), self.tables))
 
@@ -147,7 +193,7 @@ class SqlGenerator:
 
         body = node.uncurry() [1]
         
-        self._visit_combinator(self._visit_function(body))
+        where_clause_constants = self._make_where_clause(body)
         self._induce_variable_constraints()
 
         result_clause = ", ".join(map(
@@ -156,15 +202,17 @@ class SqlGenerator:
         from_clause = ", ".join(map(
             lambda t: "%s AS %s" % t,
             self.tables))
-        where_clause = " AND ".join(map(
+        where_clause_variables = " AND ".join(map(
             lambda c: "%s = %s" % (self.resolve_value(c[0:2]), self.resolve_value(c[2])), 
             self.constraints))
+        
+        total_where_clause = "(%s) AND (%s)" %(where_clause_constants, where_clause_variables)
 
-        yield "SELECT {0} FROM {1} WHERE {2}".format(result_clause, from_clause, where_clause)
+        yield "SELECT {0} FROM {1} WHERE {2}".format(result_clause, from_clause, total_where_clause)
     
         
     def make_count (self, node):
-        self.type = "SELECT"
+        self.type = "COUNT"
 
         body = node.argument.uncurry() [1]        
         self._visit_combinator(self._visit_function(body))       
@@ -181,7 +229,7 @@ class SqlGenerator:
     
     
     def make_bool (self, node):
-        self.type = "SELECT"
+        self.type = "BOOL"
 
         self._visit_combinator(self._visit_function(node.argument))
         self._induce_variable_constraints()

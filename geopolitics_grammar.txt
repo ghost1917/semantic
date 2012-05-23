@@ -6,6 +6,8 @@ VP/NP::(A) -> V:=A
 VP::(A)(B) -> V:=A NP:=B
 VP::(A)(B) -> V:=A PP/VP:=B
 VP::(\x.A(x)&&B(x)) -> VP:=A AND VP:=B
+VP::(\x.A(x)||B(x)) -> VP:=A OR VP:=B
+VP::(\x.!A(x)) -> NOT VP:=A
 NP/VP::(B)(A) -> NP:=A PP/VP:=B
 NP/VP::(B)(A) -> NP:=A NP:=B
 
@@ -13,6 +15,9 @@ NP::(\x.A(x)&&B(x)) -> D ADJ:=A NP_PRED:=B
 NP::(B)(A) -> NP:=A PP/NP:=B
 PP/VP::(A)(B) -> P/VP:=A NP:=B
 PP/NP::(A)(B) -> P/NP:=A NP:=B
+PP/VP::(\x.A(x)&&B(x)) -> PP/VP:=A AND PP/VP:=B
+PP/VP::(\x.A(x)||B(x)) -> PP/VP:=A OR PP/VP:=B
+PP/VP::(\x.!A(x)) -> NOT PP/VP:=A
 NP::(A) -> NN:=A
 NP::(A) -> NP_PRED:=A
 NP_PRED::(A) -> N:=A
@@ -23,7 +28,6 @@ NPWH::(A)(B) -> NPWH/NP/POS:=A NP:=B
 NPWH/NP/POS::(A)(B) -> NPWH/NP/POS_WAIT:=A NP_POS:=B
 NP_POS::(A) -> N:=A s
 NP_POS::(A) -> NN:=A s
-NP::(B)(A) -> NP_POS:=A NP:=B
 
 
 P/VP::(\x.\y.In(x,y)) -> in
@@ -31,6 +35,8 @@ P/VP::(\x.x) -> with
 P/NP::(\x.\P.\y.P(y)&&In(x,y)) -> in
 P/NP::(\x.\P.P(x)) -> of
 AND -> and
+OR -> or
+NOT -> not
 
 N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capital
 N::(\y.\x.Capital(y,x)&&City(x)&&Country(y)&&In(y,x)) -> capitals

@@ -129,7 +129,6 @@ There are a few service commands:
             print ":", "largest(%s)" % (row [0]) 
 
     def cmd_eval(self, semantics):
-        #print semantics;
         for query in logic_to_sql.SqlGenerator().make_sql(semantics):
             for row in self._execute(query):
                 print ":", " ".join(map(str, row))
@@ -165,12 +164,15 @@ There are a few service commands:
 
                 if len(variants) == 0:
                     print '(!) Unable to parse query.'
-                elif len(variants) > 1:
-                    print '(!) Query is ambiguous.'
-                    for semantics, tree in variants:
-                        print "    ", earley.qtree(tree)
                 else:
+                    if len(variants) > 1:
+                        print '(!) Query is ambiguous.'
+                        for semantics, tree in variants:
+                            print "    ", earley.qtree(tree)
+                        print "We will use syntax form"
+                        
                     semantics, tree = variants[0]
+                        
                     if self.debug:
                         print
                         print "T=", string

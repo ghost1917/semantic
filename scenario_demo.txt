@@ -32,6 +32,10 @@ russia borders with belarus
 ukrane borders with belarus
 belarus borders with ukrane
 
+moscow is the largest city in russia
+kiev is the largest city in ukrane 
+berlin is the largest city in germany
+
 
 # ======================================================
 # А вот разные запросы к нашей базе знаний:
@@ -84,5 +88,16 @@ how many countries border with russia and border with germany
 
 # тип 10 
 what is the largest city in russia
-what is the largest city in berlin
+what is the largest city in germany
 what is the largest city in ukrane
+
+
+# тип 11 запросы с OR
+which cities are in russia or in ukrane
+which cities are in russia or in germany
+which cities are in ukrane or in germany
+
+# тип 12 запросы с NOT
+which cities are not in russia 
+which cities are not in ukrane
+which cities are not in germany

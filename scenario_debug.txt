@@ -5,10 +5,23 @@
 .init
 .trace
 .debug
-russia is a country
-ukrane is a country
+
+moscow is the capital of russia
+berlin is the capital of germany
+kiev is the capital of ukrane
+belarus is a country
+
+yaroslavl is the city in russia
+piter is the city in russia
+odessa is a city
+odessa is in ukrane
+kharkiv is a city 
+kharkiv is in ukrane
 belarus is a country
 germany is a country
+russia is a country
+ukrane is a country
+
 germany borders with russia
 russia borders with germany
 russia borders with ukrane
@@ -18,8 +31,11 @@ russia borders with belarus
 ukrane borders with belarus
 belarus borders with ukrane
 
-which countries border with russia and border with ukrane
-which countries border with ukrane and border with belarus and border with germany
-how many countries border with russia and border with ukrane
+#which country borders with russia and not borders with ukrane or borders with germany
+which countries border with russia and not border with ukrane
+
+which cities are in russia and in ukrane
+which cities are in russia or in ukrane or in germany
+which cities are not in russia
 
 .dump
